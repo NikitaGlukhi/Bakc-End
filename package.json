@@ -10,6 +10,7 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "express": "^4.15.5",
+    "gravatar": "^1.6.0",
     "morgan": "~1.8.1",
     "mysql2": "^1.5.1",
     "path": "^0.12.7",
