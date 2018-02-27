@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('post_office_db', 'root', 'password', {
+const sequelize = new Sequelize('post_office_db', 'root', 'Nikita06021999', {
     host: "localhost",
     dialect: "mysql",
 
@@ -179,6 +179,29 @@ router.get('/offices', function(req, res) {
         .catch(function(error) {
             res.status(500).send(error)
     });
+});
+
+router.post('/authenticate', function(req, res) {
+
+    console.log(req.body.e_mail);
+
+    User.findAll({
+        attributes: ['e_mail'],
+        where: {
+            e_mail: req.body.e_mail,
+            password: req.body.password
+        }
+    })
+        .then(function(result) {
+            if (!result.length) {
+                console.log('Email or password are incorrect');
+                res.status(500);
+            }
+            res.json(result);
+        })
+        .catch(function(error) {
+            res.status(500).send(error);
+        })
 });
 
 module.exports = router;

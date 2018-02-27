@@ -4,6 +4,7 @@ const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 const favicon = require('serve-favicon');
 const api = require('./routes/api');
 const PORT = 3000;
@@ -21,7 +22,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', api);
 
-const frontDir = path.join(__dirname, '../', 'front-end/dist');
+let frontDir = path.join(__dirname, '../', 'front-end/dist');
 global.frontDir = frontDir;
 app.use(express.static(frontDir));
 
@@ -46,6 +47,9 @@ app.use(function(err, req, res, next) {
     res.render('error');
 });
 
-app.listen(PORT, function() {
+app.listen(PORT, function(err) {
+    if (!err)
+        console.log("Site is live");
+    else console.log(err);
     console.log('http://localhost:' + PORT);
 });
