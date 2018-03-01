@@ -182,11 +182,8 @@ router.get('/offices', function(req, res) {
 });
 
 router.post('/authenticate', function(req, res) {
-
-    console.log(req.body.e_mail);
-
     User.findAll({
-        attributes: ['e_mail'],
+        attributes: ['first_name', 'last_name', 'username', 'status'],
         where: {
             e_mail: req.body.e_mail,
             password: req.body.password
