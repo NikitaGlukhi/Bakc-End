@@ -79,6 +79,18 @@ router.post('/users', function(req, res) {
         });
 });
 
+router.get('/users', function(req, res) {
+    User.findAll({
+        attributes: ['user_id', 'first_name', 'last_name', 'username', 'status', 'e_mail', 'age', 'createdAt']
+    })
+        .then(function(result) {
+            res.status(200).json(result)
+        })
+        .catch(function(error) {
+            res.status(500).send(error);
+        })
+});
+
 /*define "driver" table*/
 const Driver  = sequelize.define('drivers', {
     driver_id: {
@@ -106,7 +118,7 @@ router.get('/drivers', function(req, res) {
             attributes: ['firstName', 'lastName', 'experience', 'driver_licence', 'deliveries_count']
     })
         .then(function(result) {
-            res.json(result);
+            res.status(200).json(result);
     })
         .catch(function(error) {
             res.status(500).send(error)
@@ -131,7 +143,7 @@ router.get('/cities', function(req, res) {
         attributes: ['city_id', 'city_name'],
     })
         .then(function(result) {
-            res.json(result)
+            res.status(200).json(result)
         })
         .catch(function(error) {
             res.status(500).send(error);
@@ -174,7 +186,7 @@ router.get('/offices', function(req, res) {
         }
     })
         .then(function(result) {
-            res.json(result)
+            res.status(200).json(result)
     })
         .catch(function(error) {
             res.status(500).send(error)
@@ -182,8 +194,7 @@ router.get('/offices', function(req, res) {
 });
 
 router.post('/authenticate', function(req, res) {
-    User.findAll({
-        attributes: ['first_name', 'last_name', 'username', 'status'],
+    User.findOne({
         where: {
             e_mail: req.body.e_mail,
             password: req.body.password
@@ -194,6 +205,78 @@ router.post('/authenticate', function(req, res) {
                 console.log('Email or password are incorrect');
                 res.status(500);
             }
+            res.status(200).json(result);
+        })
+        .catch(function(error) {
+            res.status(500).send(error);
+        })
+});
+
+const Statement = sequelize.define('statement', {
+    statement_id: {
+        type: Sequelize.INTEGER, primaryKey: true
+    },
+    user_id: {
+        type: Sequelize.INTEGER,
+    },
+    product_name: {
+        type: Sequelize.STRING
+    },
+    weight: {
+        type: Sequelize.INTEGER
+    },
+    storage_conditions: {
+        type: Sequelize.STRING
+    },
+    count: {
+        type: Sequelize.INTEGER
+    },
+    status: {
+        type: Sequelize.BOOLEAN
+    },
+    shipping_city: {
+        type: Sequelize.STRING
+    },
+    shipping_address: {
+        type: Sequelize.STRING
+    },
+    delivery_city: {
+        type: Sequelize.STRING
+    },
+    delivery_address: {
+        type: Sequelize.STRING
+    },
+},
+    {
+        tableName: 'statement'
+    });
+
+router.post('/statements', function(req, res) {
+    console.log('req.body', req.body);
+   Statement.create({
+       user_id: req.body.user_id,
+       product_name: req.body.order.product_name,
+       weight: req.body.order.weight,
+       storage_conditions: req.body.order.storage_conditions,
+       count: req.body.order.count,
+       shipping_city: req.body.order.shipping_city.city_name,
+       shipping_address: req.body.order.shipping_address,
+       delivery_city: req.body.order.delivery_city.city_name,
+       delivery_address: req.body.order.delivery_address,
+   })
+       .then(function(result) {
+           res.status(200).json(result)
+       })
+       .catch(function(error) {
+           res.status(500).send(error);
+       });
+});
+
+router.get('/statements', function(req, res) {
+    Statement.findAll({
+        attributes: ['statement_id', 'user_id', 'product_name', 'weight', 'storage_conditions', 'count', 'shipping_city', 'shipping_address', 'delivery_city', 'delivery_address']
+    })
+        .then(function (result) {
             res.json(result);
         })
         .catch(function(error) {
