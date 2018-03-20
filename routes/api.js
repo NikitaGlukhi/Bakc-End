@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('post_office_db', 'root', 'Nikita06021999', {
+const sequelize = new Sequelize('post_office_db', 'root', 'password', {
     host: "localhost",
     dialect: "mysql",
 
